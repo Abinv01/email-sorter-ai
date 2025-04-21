@@ -1,33 +1,23 @@
-# classifier.py
+import re
 
-import json
+def clean_forwarded_email(body):
+    # Remove common forwarded email headers
+    body = re.sub(r'^From:.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^Sent:.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^To:.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^Subject:.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'\n+', '\n', body).strip()
+    return body
 
-CONFIG_FILE = "keywords_config.json"
-
-def load_keywords():
-    with open(CONFIG_FILE, "r") as file:
-        data = json.load(file)
-        print("Loaded keywords:", data)  # Debugging line to show the contents
-        return data
-
-keywords = load_keywords()
-
-def classify_email(subject, body):
-    content = f"{subject.lower()} {body.lower()}"
-
-    # Handle negative outcome emails (e.g., rejection)
-    for phrase in keywords.get("negative_keywords", []):  # Corrected key
-        if phrase in content:
-            return "Negative Response"
-
-    # Handle application received emails
-    for phrase in keywords.get("application_received_keywords", []):  # Corrected key
-        if phrase in content:
-            return "Application Received"
-
-    # Handle positive outcome emails
-    for phrase in keywords.get("positive_keywords", []):  # Corrected key
-        if phrase in content:
+def classify_email(subject, body, keywords):
+    full_text = f"{subject.lower()} {body.lower()}"
+    for phrase in keywords['positive_keywords']:
+        if phrase in full_text:
             return "Positive Update"
-
-    return "Neutral / Unknown"
+    for phrase in keywords['negative_keywords']:
+        if phrase in full_text:
+            return "Negative Outcome"
+    for phrase in keywords['application_received_keywords']:
+        if phrase in full_text:
+            return "Application Received"
+    return "Uncategorized"
