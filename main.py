@@ -11,7 +11,7 @@ def main():
 
     for email in emails:
         print(f"Checking email: {email['subject']}")
-        classification = classify_email(email['body'])
+classification = classify_email(email['subject'], email['body'])
         print(f"  ➤ Classified as: {classification}")
         if classification.lower() == "positive update":
             label_email(service, email['id'], label_id)
