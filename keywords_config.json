@@ -1,0 +1,18 @@
+{
+  "positive_keywords": [
+    "next steps", "interview", "progress", "moved forward",
+    "schedule", "phone call", "meeting", "shortlisted", "congratulations",
+    "offer", "selected", "advance", "invitation", "successful"
+  ],
+  "negative_keywords": [
+    "unfortunately", "regret", "not selected", "no longer considered",
+    "decline", "unsuccessful", "we’ve moved on", "position has been filled"
+  ],
+  "application_received_keywords": [
+    "we have received your application",
+    "application confirmation",
+    "application received",
+    "thank you for applying",
+    "account registration confirmation"
+  ]
+}

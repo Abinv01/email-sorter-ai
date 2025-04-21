@@ -1,32 +1,33 @@
-import re
+# classifier.py
 
-def classify_email(text):
-    """
-    A simple rule-based classifier to determine if an email is a positive job update
-    or a rejection email.
-    """
+import json
 
-    text_lower = text.lower()
+CONFIG_FILE = "keywords_config.json"
 
-    positive_keywords = [
-        "next steps", "interview", "shortlisted", "progressing", "moving forward",
-        "schedule", "congratulations", "we would like to", "we're impressed"
-    ]
+def load_keywords():
+    with open(CONFIG_FILE, "r") as file:
+        data = json.load(file)
+        print("Loaded keywords:", data)  # Debugging line to show the contents
+        return data
 
-    negative_keywords = [
-        "unfortunately", "not selected", "regret to inform", "another candidate",
-        "unsuccessful", "did not move", "decline"
-    ]
+keywords = load_keywords()
 
-    # Check for positive keywords
-    for phrase in positive_keywords:
-        if phrase in text_lower:
+def classify_email(subject, body):
+    content = f"{subject.lower()} {body.lower()}"
+
+    # Handle negative outcome emails (e.g., rejection)
+    for phrase in keywords.get("negative_keywords", []):  # Corrected key
+        if phrase in content:
+            return "Negative Response"
+
+    # Handle application received emails
+    for phrase in keywords.get("application_received_keywords", []):  # Corrected key
+        if phrase in content:
+            return "Application Received"
+
+    # Handle positive outcome emails
+    for phrase in keywords.get("positive_keywords", []):  # Corrected key
+        if phrase in content:
             return "Positive Update"
 
-    # Check for negative keywords
-    for phrase in negative_keywords:
-        if phrase in text_lower:
-            return "Negative Outcome"
-
-    # Default fallback
     return "Neutral / Unknown"
