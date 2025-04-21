@@ -1,4 +1,7 @@
-token.pickle
+# Ignore credentials and tokens
 credentials.json
-__pycache__/
-*.pyc
+token.json
+.env
+
+# Ignore system files
+.DS_Store
