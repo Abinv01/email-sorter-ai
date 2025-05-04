@@ -1,26 +1,29 @@
-import json
-from email_client import fetch_emails, archive_email
+import time
+from email_client import fetch_emails
 from email_classifier import classify_email, clean_forwarded_email
+from utils import load_keywords
 
-def load_keywords():
-    with open("config/keywords.json", "r") as file:
-        return json.load(file)
-
-def main():
+def main_loop():
     keywords = load_keywords()
-    print("Loaded keywords:", keywords)
+    while True:
+        print("🔄 Checking for new emails...")
+        emails = fetch_emails()
+        for email in emails:
+            cleaned_body = clean_forwarded_email(email['snippet'])
+            classification = classify_email(cleaned_body, keywords)
+            print(f"📧 {email['subject']}")
+            print(f"  ➤ Classified as: {classification}")
 
-    emails = fetch_emails()
-    for email in emails:
-        print(f"\nChecking email: {email['subject']}")
-        cleaned_body = clean_forwarded_email(email['body'])
-        classification = classify_email(email['subject'], cleaned_body, keywords)
-        print(f"  ➤ Classified as: {classification}")
-
-        # Auto-archive logic
-        if classification in ['Application Received', 'Negative Outcome']:
-            archive_email(email['id'])
-            print("  ➤ Archived this email to protect your mental peace ❤️‍🩹")
+            # Archive based on classification
+            if classification in ['Application Received', 'Negative Outcome']:
+                print("🗂️ Archiving email...")
+                email['service'].users().messages().modify(
+                    userId='me',
+                    id=email['id'],
+                    body={'removeLabelIds': ['INBOX']}
+                ).execute()
+        print("✅ Done. Sleeping for 5 minutes.\n")
+        time.sleep(300)  # 5 minutes
 
 if __name__ == "__main__":
-    main()
+    main_loop()
