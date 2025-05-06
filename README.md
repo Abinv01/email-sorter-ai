@@ -6,7 +6,11 @@
 
 The **Email Sorter AI Agent** is a Python-based AI tool that automatically classifies and labels incoming emails based on predefined keywords. It uses the Gmail API to access the user's inbox, classify emails into categories (e.g., "Positive Response", "Negative Outcome", and "Application Received"), and apply labels for better email organization.
 
-The goal of the AI agent is to streamline the process of managing email inboxes, making it easier to focus on important emails and discard irrelevant ones.
+The goal of the AI agent is to streamline the process of managing email inboxes, making it easier to focus on important emails and discard irrelevant ones. 
+
+Phase 1: Currently it classfies emails based on keyword match.
+
+Phase 2: In Phase 2 the Agent shall run on an infinite loop with a sleep of 5 minutes and it shall utilise LLM to find patterns and categorise emails based on enhanced capabilities. Phase 2 is currently under testing and will be available soon.
 
 ## Features
 
