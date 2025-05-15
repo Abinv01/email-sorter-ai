@@ -1,6 +1,6 @@
 
 
- Email Sorter AI Agent
+ Email Sorter AI Agent for Job Seekers
 
  ## Overview
 
